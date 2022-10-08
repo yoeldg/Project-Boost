@@ -48,7 +48,7 @@ public class Movement : MonoBehaviour
     {
         myRigidBody.freezeRotation = true; //freeze rotation so we can manually rotate
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
-        myRigidBody.freezeRotation = false; //freeze rotation so physics system can take over
+        myRigidBody.freezeRotation = false; //freeze rotation so physics system can take over (test)
     }
 
 }
