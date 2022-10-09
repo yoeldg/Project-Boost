@@ -26,56 +26,82 @@ public class Movement : MonoBehaviour
         ProcessThrust();
         ProcessRotation();
     }
-
-    void ProcessRotation()
-    {
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            Debug.Log("Rotate left");
-            ApplyRotation(rotationForce);
-            if (!leftThrustParticles.isPlaying)
-            {
-                leftThrustParticles.Play();
-            }
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            Debug.Log("Rotate right");
-            ApplyRotation(-rotationForce);
-            if (!rightThrustParticles.isPlaying)
-            {
-                rightThrustParticles.Play();
-            }
-        }
-        else
-        {
-            rightThrustParticles.Stop();
-            leftThrustParticles.Stop();
-        }
-    }
-
     void ProcessThrust()
     {
         if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space))
         {
-            Vector3 thrustVector = Vector3.up * thrustForce * Time.deltaTime;
-            myRigidBody.AddRelativeForce(thrustVector);
-            if (!audioSource.isPlaying )
-            {
-                audioSource.clip = mainEngineAudio;
-                audioSource.Play();
-            }
-            if (!mainThrustParticles.isPlaying)
-            {
-                mainThrustParticles.Play();
-            }
+            StartThrust();
         }
         else
         {
-            audioSource.Stop();
-            mainThrustParticles.Stop();
+            StopThrust();
         }
     }
+    void ProcessRotation()
+    { 
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            RotateLeft();
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            RotateRight();
+        }
+        else
+        {
+            StopRotate();
+        }
+    }
+
+    private void StopRotate()
+    {
+        rightThrustParticles.Stop();
+        leftThrustParticles.Stop();
+    }
+
+    private void RotateRight()
+    {
+        Debug.Log("Rotate right");
+        ApplyRotation(-rotationForce);
+        if (!rightThrustParticles.isPlaying)
+        {
+            rightThrustParticles.Play();
+        }
+    }
+
+    private void RotateLeft()
+    {
+        Debug.Log("Rotate left");
+        ApplyRotation(rotationForce);
+        if (!leftThrustParticles.isPlaying)
+        {
+            leftThrustParticles.Play();
+        }
+    }
+
+    
+
+    private void StopThrust()
+    {
+        audioSource.Stop();
+        mainThrustParticles.Stop();
+    }
+
+    private void StartThrust()
+    {
+        Vector3 thrustVector = Vector3.up * thrustForce * Time.deltaTime;
+        myRigidBody.AddRelativeForce(thrustVector);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.clip = mainEngineAudio;
+            audioSource.Play();
+        }
+        if (!mainThrustParticles.isPlaying)
+        {
+            mainThrustParticles.Play();
+        }
+    }
+
     private void ApplyRotation(float rotationThisFrame)
     {
         myRigidBody.freezeRotation = true; //freeze rotation so we can manually rotate

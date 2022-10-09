@@ -9,6 +9,9 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] AudioClip successAudio;
     [SerializeField] ParticleSystem successParticles;
     [SerializeField] ParticleSystem explosionParticles;
+    [SerializeField] GameObject shield;
+
+    bool isInvulnerable = false;
     
 
     AudioSource audioSource;
@@ -18,11 +21,27 @@ public class CollisionHandler : MonoBehaviour
     private void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
+        shield.SetActive(false);
     }
+    private void Update()
+    {
+        RespondToDebugKeys();
+    }
+
+    private void RespondToDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            isInvulnerable = !isInvulnerable;
+            shield.SetActive(isInvulnerable);
+            Debug.Log("invulnarablity: " + isInvulnerable);
+        }
+    }
+
     void OnCollisionEnter(Collision other)
     {
         if (isTransitioning){ return; }
-
+        if (isInvulnerable) { return; }
         switch (other.gameObject.tag)
         {
             case "Friendly":
@@ -53,10 +72,6 @@ public class CollisionHandler : MonoBehaviour
         audioSource.Stop();
         audioSource.PlayOneShot(explosionAudio);
         explosionParticles.Play();
-        Debug.Log(explosionParticles.isPlaying);
-        Debug.Log(explosionParticles.isEmitting);
-        Debug.Log(explosionParticles.isStopped);
-        Debug.Log(explosionParticles.isPaused);
         Invoke("ReloadLevel", loadingDelay);
     }
 
