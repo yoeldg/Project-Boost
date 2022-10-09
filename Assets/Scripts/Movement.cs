@@ -6,15 +6,18 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] float thrustForce;
     [SerializeField] float rotationForce;
-    Rigidbody myRigidBody;
+    [SerializeField] AudioClip mainEngineAudio;
+    
 
-    // Start is called before the first frame update
+    Rigidbody myRigidBody;
+    AudioSource audioSource;
+    
     void Start()
     {
         myRigidBody = gameObject.GetComponent<Rigidbody>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         ProcessThrust();
@@ -42,13 +45,21 @@ public class Movement : MonoBehaviour
         {
             Vector3 thrustVector = Vector3.up * thrustForce * Time.deltaTime;
             myRigidBody.AddRelativeForce(thrustVector);
-        }  
+            if (!audioSource.isPlaying)
+            {
+                audioSource.clip = mainEngineAudio;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop();
+        }
     }
     private void ApplyRotation(float rotationThisFrame)
     {
         myRigidBody.freezeRotation = true; //freeze rotation so we can manually rotate
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
-        myRigidBody.freezeRotation = false; //freeze rotation so physics system can take over (test)
+        myRigidBody.freezeRotation = false; //freeze rotation so physics system can take over
     }
-
 }
