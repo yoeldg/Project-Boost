@@ -41,7 +41,6 @@ public class CollisionHandler : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         if (isTransitioning){ return; }
-        if (isInvulnerable) { return; }
         switch (other.gameObject.tag)
         {
             case "Friendly":
@@ -50,7 +49,9 @@ public class CollisionHandler : MonoBehaviour
                 StartSuccessSequence();
                 break;
             default:
-                StartCrashSequence();
+                if (!isInvulnerable) {
+                    StartCrashSequence();
+                }
                 break;
         }
         

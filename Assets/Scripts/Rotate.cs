@@ -8,7 +8,7 @@ public class Rotate : MonoBehaviour
 
     void Update()
     {
-        transform.eulerAngles += degreesPerSecond * Time.deltaTime;
+        transform.localEulerAngles += degreesPerSecond * Time.deltaTime;
         Debug.Log(degreesPerSecond * Time.deltaTime);
     }
 }
